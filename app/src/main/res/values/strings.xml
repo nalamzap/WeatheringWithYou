@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Weathering With You</string>
+    <string name="proceed">Proceed</string>
+    <string name="weather_api_key">c662fedc6d6b4f05b96144544252804</string>
+</resources>
