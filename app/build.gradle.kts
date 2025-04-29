@@ -13,8 +13,8 @@ android {
         applicationId = "dev.nalamzap.weatheringwithyou"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = findProperty("android.versionCode").toString().toInt()
+        versionName = findProperty("android.versionName").toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
