@@ -1,7 +1,4 @@
 <resources>
     <string name="app_name">Weathering With You</string>
     <string name="proceed">Proceed</string>
-
-<!--    Replace with you API key below-->
-    <string name="weather_api_key">WEATHERAPI.COM_API_KEY</string>
 </resources>

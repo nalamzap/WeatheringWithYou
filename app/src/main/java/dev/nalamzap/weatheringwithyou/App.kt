@@ -33,7 +33,7 @@ class App: Application() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val apiKey = getString(R.string.weather_api_key)
+        val apiKey = BuildConfig.WEATHER_API_KEY
 
         weatherService = retrofit.create(WeatherService::class.java)
 
