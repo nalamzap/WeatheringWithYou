@@ -2,6 +2,7 @@ package dev.nalamzap.weatheringwithyou
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -39,9 +40,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import dev.nalamzap.weatheringwithyou.MainActivity.Companion.TAG
 import dev.nalamzap.weatheringwithyou.feature_preference.PreferenceActivity
 import dev.nalamzap.weatheringwithyou.ui.theme.WeatheringWithYouTheme
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,6 +54,11 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
         MainViewModelFactory(
+            toastListener = {
+                lifecycleScope.launch {
+                    Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
+                }
+            },
             App.instance.weatherRepo,
             getCity() ?: ""
         )

@@ -10,8 +10,9 @@ import dev.nalamzap.weatheringwithyou.weather.WeatherRepo
 import kotlinx.coroutines.launch
 
 class MainViewModel(
+    private val toastListener: Listener.ToastListener,
     private val repository: WeatherRepo,
-    private val cityPref: String
+    cityPref: String
 ) : ViewModel() {
 
     var city by mutableStateOf(cityPref)
@@ -42,11 +43,14 @@ class MainViewModel(
                 if (getOffline) {
                     val cached = repository.getCachedWeather()
                     weatherState = cached
+                    isLoading = false
                 }
-
-                repository.fetchAndSaveWeather(city)
-
-                weatherState = repository.getCachedWeather()
+                if (App.instance.isNetworkAvailable()) {
+                    repository.fetchAndSaveWeather(city)
+                    weatherState = repository.getCachedWeather()
+                } else {
+                    toastListener.showToast("Are you offline?")
+                }
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {
