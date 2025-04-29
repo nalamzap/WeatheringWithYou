@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        App.instance.scheduleWeatherUpdateWorker()
         cityPref = getCity() ?: ""
 
         setContent {

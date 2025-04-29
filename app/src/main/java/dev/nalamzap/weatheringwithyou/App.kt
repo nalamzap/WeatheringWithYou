@@ -52,7 +52,6 @@ class App: Application() {
             weatherService = weatherService,
             apiKey = apiKey
         )
-        scheduleWeatherUpdateWorker()
         connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
