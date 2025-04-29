@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
@@ -34,16 +32,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.nalamzap.weatheringwithyou.MainActivity.Companion.TAG
 import dev.nalamzap.weatheringwithyou.feature_preference.PreferenceActivity
 import dev.nalamzap.weatheringwithyou.ui.theme.WeatheringWithYouTheme
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -130,9 +129,12 @@ fun MainScreen(
 
         when {
             viewModel.isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(alignment = androidx.compose.ui.Alignment.CenterHorizontally))
+                Log.d(TAG, "MainScreen: Loading")
+                CircularProgressIndicator(
+                    modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
             }
             viewModel.errorMessage != null -> {
+                Log.d(TAG, "MainScreen: Error")
                 Text(
                     text = viewModel.errorMessage ?: "Unknown error",
                     color = MaterialTheme.colorScheme.error,
@@ -142,9 +144,24 @@ fun MainScreen(
             viewModel.weatherState != null -> {
                 val weather = viewModel.weatherState!!
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = "Temperature: ${weather.temperature}°C")
-                    Text(text = "Condition: ${weather.condition}")
-                    Text(text = "Updated at: ${formatTimestamp(weather.timestamp)}")
+                    Text(
+                        text = "Temperature: ${weather.temperature}°C",
+                        fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "Condition: ${weather.condition}",
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                        modifier = Modifier.padding(bottom = 8.dp).alpha(0.8f)
+                    )
+                    Text(
+                        text = "Updated at: ${formatTimestamp(weather.timestamp)}",
+                        modifier = Modifier.alpha(0.7f)
+                    )
                 }
             }
             else -> {
@@ -155,7 +172,7 @@ fun MainScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1.3f))
     }
     if (scrim.value) {
         Column(
@@ -216,7 +233,7 @@ fun formatTimestamp(timestampMillis: Long): String {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    var scrim = remember { mutableStateOf(true) }
+    val scrim = remember { mutableStateOf(true) }
     WeatheringWithYouTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
@@ -252,7 +269,7 @@ fun MainScreenPreview() {
             if (scrim.value) {
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
+                        .background(MaterialTheme.colorScheme.scrim)
                         .clickable {
                             scrim.value = false
                         }

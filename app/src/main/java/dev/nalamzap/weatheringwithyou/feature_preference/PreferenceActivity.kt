@@ -1,11 +1,14 @@
 package dev.nalamzap.weatheringwithyou.feature_preference
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +31,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import dev.nalamzap.weatheringwithyou.MainActivity
 import dev.nalamzap.weatheringwithyou.R
 import dev.nalamzap.weatheringwithyou.ui.theme.WeatheringWithYouTheme
 
 class PreferenceActivity : ComponentActivity() {
+
+    private val requestNotificationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.d(TAG, "Notification permission granted")
+        } else {
+            Log.d(TAG, "Notification permission denied")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +55,12 @@ class PreferenceActivity : ComponentActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
         setContent {
             WeatheringWithYouTheme {
