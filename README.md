@@ -1,7 +1,7 @@
 # WeatherApp
 
 ## Project Overview
-**WeatherWithYou** is a modern Android application built with Kotlin and Jetpack Compose.  
+**WeatheringWithYou** is a modern Android application built with Kotlin and Jetpack Compose.  
 It allows users to view real-time weather updates for their preferred city, even when offline.  
 The app fetches weather data from the OpenWeatherMap API, caches it locally, and provides periodic notifications with the latest updates.
 
