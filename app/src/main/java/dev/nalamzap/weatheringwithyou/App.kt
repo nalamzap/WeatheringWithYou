@@ -1,6 +1,8 @@
 package dev.nalamzap.weatheringwithyou
 
 import android.app.Application
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.room.Room
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -23,6 +25,8 @@ class App: Application() {
 
     lateinit var weatherRepo: WeatherRepo
         private set
+
+    private lateinit var connectivityManager: ConnectivityManager
 
     override fun onCreate() {
         super.onCreate()
@@ -48,8 +52,8 @@ class App: Application() {
             weatherService = weatherService,
             apiKey = apiKey
         )
-
         scheduleWeatherUpdateWorker()
+        connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     fun scheduleWeatherUpdateWorker() {
@@ -63,6 +67,19 @@ class App: Application() {
                 ExistingPeriodicWorkPolicy.KEEP,
                 workRequest
             )
+    }
+
+    fun isNetworkAvailable(): Boolean {
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+            ?: return false
+        return when {
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+            else -> false
+        }
     }
 
     companion object {
