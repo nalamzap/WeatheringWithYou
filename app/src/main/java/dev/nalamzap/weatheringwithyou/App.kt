@@ -17,11 +17,9 @@ import java.util.concurrent.TimeUnit
 
 class App: Application() {
 
-    lateinit var weatherService: WeatherService
-        private set
+    private lateinit var weatherService: WeatherService
 
-    lateinit var weatherDatabase: WeatherDB
-        private set
+    private lateinit var weatherDatabase: WeatherDB
 
     lateinit var weatherRepo: WeatherRepo
         private set

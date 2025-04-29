@@ -108,8 +108,8 @@ fun MainScreen(
     saveCity: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var scrim = remember { mutableStateOf(false) }
-    var newCity = remember { mutableStateOf(viewModel.city) }
+    val scrim = remember { mutableStateOf(false) }
+    val newCity = remember { mutableStateOf(viewModel.city) }
     Column(modifier = modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(32.dp))
 
