@@ -9,5 +9,6 @@ data class WeatherEnt(
     val id: Int = 0,
     val temperature: Double,
     val condition: String,
+    val conditionIcon: String,
     val timestamp: Long
 )

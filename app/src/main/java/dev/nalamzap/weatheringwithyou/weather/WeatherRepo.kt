@@ -3,6 +3,7 @@ package dev.nalamzap.weatheringwithyou.weather
 import android.util.Log
 import dev.nalamzap.weatheringwithyou.localDB.WeatherDao
 import dev.nalamzap.weatheringwithyou.localDB.WeatherEnt
+import org.json.JSONObject
 
 class WeatherRepo(
     private val weatherDao: WeatherDao,

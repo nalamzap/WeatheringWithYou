@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "139405949235",
+    "project_id": "whethering-with-you",
+    "storage_bucket": "whethering-with-you.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139405949235:android:813014a9856281e410e646",
+        "android_client_info": {
+          "package_name": "dev.nalamzap.weatheringwithyou"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTO_FQG3pgdb6sJaFP0Q-D7Wwz9RRF4VU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
