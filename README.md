@@ -2,7 +2,7 @@
 
 ## Project Overview
 **WeatheringWithYou** is a modern Android application built with Kotlin and Jetpack Compose.  
-It allows users to view real-time weather updates for their preferred city, even when offline.  
+It allows users to view weather data for their preferred city, even when offline(That is if they had network connectivity when scheduled updates are requested).  
 The app fetches weather data from the OpenWeatherMap API, caches it locally, and provides periodic notifications with the latest updates.
 
 ---
