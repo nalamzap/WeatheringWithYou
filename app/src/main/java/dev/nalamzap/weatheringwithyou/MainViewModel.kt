@@ -52,7 +52,9 @@ class MainViewModel(
                 } else {
                     toastListener.showToast("Are you offline?")
                 }
+                errorMessage = null
             } catch (e: Exception) {
+                Log.d("MainViewModel", "loadWeather: $e")
                 errorMessage = e.message
             } finally {
                 isLoading = false

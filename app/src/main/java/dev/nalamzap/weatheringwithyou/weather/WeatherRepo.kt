@@ -20,18 +20,30 @@ class WeatherRepo(
         if (response.isSuccessful) {
             Log.d("WeatherRepo", "fetchAndSaveWeather: ${response.body()}")
             response.body()?.let { weatherResponse ->
+                val responseString = weatherResponse.string()
+                val jsonObject = JSONObject(responseString)
                 val weatherEnt = WeatherEnt(
-                    temperature = weatherResponse.current.temp_c,
-                    condition = weatherResponse.current.condition.text,
-                    timestamp = weatherResponse.location.localtime_epoch
+                    temperature = jsonObject.getJSONObject("current")
+                        .getDouble("temp_c"),
+                    condition = jsonObject.getJSONObject("current")
+                        .getJSONObject("condition").getString("text"),
+                    conditionIcon = jsonObject.getJSONObject("current")
+                        .getJSONObject("condition").getString("icon"),
+                    timestamp = jsonObject.getJSONObject("location")
+                        .getLong("localtime_epoch")
                 )
                 weatherDao.deleteAll()
                 weatherDao.insertWeather(weatherEnt)
                 return weatherEnt
             }
         } else {
-            Log.d("WeatherRepo", "fetchAndSaveWeather: ${response.code()}")
-            throw Exception("Network call failed: ${response.code()}")
+            if (response.code() == 400) {
+                throw Exception("Did you get the city wrong?\nCheck your spelling and try again.")
+            } else if (response.code() == 403) {
+                throw Exception("Are you using the correct API key?")
+            } else {
+                throw Exception("Network call failed: ${response.code()}")
+            }
         }
         return null
     }
