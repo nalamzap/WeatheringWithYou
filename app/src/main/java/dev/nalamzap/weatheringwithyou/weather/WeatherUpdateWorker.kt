@@ -1,12 +1,17 @@
 package dev.nalamzap.weatheringwithyou.weather
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.bumptech.glide.Glide
 import dev.nalamzap.weatheringwithyou.App
 import dev.nalamzap.weatheringwithyou.R
 import dev.nalamzap.weatheringwithyou.feature_preference.PreferenceActivity
@@ -31,7 +36,8 @@ class WeatherUpdateWorker(
                     showNotification(
                         city = city,
                         temperature = newWeather.temperature,
-                        condition = newWeather.condition
+                        condition = newWeather.condition,
+                        iconUrl = newWeather.conditionIcon
                     )
                     Result.success()
                 } else {
@@ -44,7 +50,12 @@ class WeatherUpdateWorker(
         }
     }
 
-    private fun showNotification(city: String, temperature: Double, condition: String) {
+    private suspend fun showNotification(
+        city: String,
+        temperature: Double,
+        condition: String,
+        iconUrl: String
+    ) {
         val channelId = "weather_updates_channel"
         val name = "Weather Updates"
         val descriptionText = "Shows periodic weather updates"
@@ -52,24 +63,36 @@ class WeatherUpdateWorker(
         val channel = NotificationChannel(channelId, name, importance).apply {
             description = descriptionText
         }
-        val notificationManager: NotificationManager =
+        val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
+        val bitmap = withContext(Dispatchers.IO) {
+            Glide.with(context)
+                .asBitmap()
+                .load("https:$iconUrl")
+                .submit()
+                .get()
+        }
+
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.round_device_thermostat_24)
-            .setContentTitle("🌤️ Weather in $city")
+            .setSmallIcon(IconCompat.createWithBitmap(bitmap))
+            .setContentTitle("Weather in $city")
             .setContentText("$temperature°C, $condition")
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText("Current temperature in $city is $temperature°C with $condition.")
-            )
+            .setLargeIcon(bitmap)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true) // Notification disappears on tap
-            .setColor(context.getColor(R.color.teal_700)) // Color accent (optional)
+            .setAutoCancel(true)
+            .setColor(context.getColor(R.color.teal_700))
             .build()
 
         with(NotificationManagerCompat.from(context)) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
             notify(1001, notification)
         }
     }

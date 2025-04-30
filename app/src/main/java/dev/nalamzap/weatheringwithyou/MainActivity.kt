@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import coil.compose.AsyncImage
 import dev.nalamzap.weatheringwithyou.MainActivity.Companion.TAG
 import dev.nalamzap.weatheringwithyou.feature_preference.PreferenceActivity
 import dev.nalamzap.weatheringwithyou.ui.theme.WeatheringWithYouTheme
@@ -152,6 +154,13 @@ fun MainScreen(
             viewModel.weatherState != null -> {
                 val weather = viewModel.weatherState!!
                 Column(modifier = Modifier.padding(16.dp)) {
+                    AsyncImage(
+                        model = "https:${weather.conditionIcon}",
+                        contentDescription = weather.condition,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .padding(bottom = 8.dp)
+                    )
                     Text(
                         text = "Temperature: ${weather.temperature}°C",
                         fontSize = MaterialTheme.typography.headlineMedium.fontSize,

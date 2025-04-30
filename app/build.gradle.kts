@@ -70,6 +70,8 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.coil.compose)
+    implementation(libs.glide)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
